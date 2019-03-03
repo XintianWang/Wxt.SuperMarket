@@ -3,7 +3,43 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wxt.OnlineSuperMarket.Test.DebugConsole", "Wxt.OnlineSuperMarket.Test.DebugConsole\Wxt.OnlineSuperMarket.Test.DebugConsole.csproj", "{0513A60A-A620-44C3-BAF0-994794DC77A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wxt.OnlineSuperMarket.Test.UnitTests", "Wxt.OnlineSuperMarket.Test.UnitTests\Wxt.OnlineSuperMarket.Test.UnitTests.csproj", "{33ACC016-288A-4D75-A0B1-4B8D3F6D0DC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wxt.OnlineSuperMarket.Data.Entities", "Wxt.OnlineSuperMarket.Data.Entities\Wxt.OnlineSuperMarket.Data.Entities.csproj", "{22DC3F2E-FD7A-40A9-83F1-BE1FD767A7FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wxt.OnlineSuperMarket.Data.Repositories", "Wxt.OnlineSuperMarket.Data.Repositories\Wxt.OnlineSuperMarket.Data.Repositories.csproj", "{7511DBFC-300D-4D81-BB36-772FB3EC2CB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wxt.OnlineSuperMarket.Business.Services", "Wxt.OnlineSuperMarket.Business.Services\Wxt.OnlineSuperMarket.Business.Services.csproj", "{9EDD7A7E-39AA-41C9-8E50-E2525D8FCAD7}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0513A60A-A620-44C3-BAF0-994794DC77A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0513A60A-A620-44C3-BAF0-994794DC77A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0513A60A-A620-44C3-BAF0-994794DC77A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0513A60A-A620-44C3-BAF0-994794DC77A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33ACC016-288A-4D75-A0B1-4B8D3F6D0DC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33ACC016-288A-4D75-A0B1-4B8D3F6D0DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33ACC016-288A-4D75-A0B1-4B8D3F6D0DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33ACC016-288A-4D75-A0B1-4B8D3F6D0DC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22DC3F2E-FD7A-40A9-83F1-BE1FD767A7FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22DC3F2E-FD7A-40A9-83F1-BE1FD767A7FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22DC3F2E-FD7A-40A9-83F1-BE1FD767A7FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22DC3F2E-FD7A-40A9-83F1-BE1FD767A7FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7511DBFC-300D-4D81-BB36-772FB3EC2CB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7511DBFC-300D-4D81-BB36-772FB3EC2CB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7511DBFC-300D-4D81-BB36-772FB3EC2CB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7511DBFC-300D-4D81-BB36-772FB3EC2CB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EDD7A7E-39AA-41C9-8E50-E2525D8FCAD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EDD7A7E-39AA-41C9-8E50-E2525D8FCAD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EDD7A7E-39AA-41C9-8E50-E2525D8FCAD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EDD7A7E-39AA-41C9-8E50-E2525D8FCAD7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
