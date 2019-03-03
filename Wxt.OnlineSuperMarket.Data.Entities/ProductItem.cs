@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Wxt.OnlineSuperMarket.Data.Entities
 {
-    public class ShoppingCart
+    public class ProductItem
     {
         public int ProductId { get; set; }
         public int Count { get; set; }

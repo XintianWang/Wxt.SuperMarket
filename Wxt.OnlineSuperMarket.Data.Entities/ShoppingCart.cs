@@ -9,6 +9,6 @@ namespace Wxt.OnlineSuperMarket.Data.Entities
     public class ShoppingCart
     {
         public int CustomerId { get; set; }
-        public List<ShoppingCart> ProductItems { get; set; }
+        public List<ProductItem> ProductItems { get; set; }
     }
 }
