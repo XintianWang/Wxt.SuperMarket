@@ -11,8 +11,8 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
     {
         private static readonly List<Customer> _customers = new List<Customer>
         {
-            new Customer  { Id = 1, UserName = "Wxt"},
-            new Customer  { Id = 2, UserName = "lnw"} 
+            new Customer  { Id = 1, UserName = "Wxt", Password = "1�\u001bt�h]>�+� ��w�"},
+            new Customer  { Id = 2, UserName = "lnw", Password = ",6s�@���\u000e\a�e�enN"} 
         };
         private static readonly List<ShoppingCart> _shoppingCarts = new List<ShoppingCart>
         {
