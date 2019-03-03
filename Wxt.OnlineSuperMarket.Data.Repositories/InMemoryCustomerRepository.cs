@@ -16,8 +16,8 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
         };
         private static readonly List<ShoppingCart> _shoppingCarts = new List<ShoppingCart>
         {
-            new ShoppingCart { CustomerId = 1, ProductItems = new List<ShoppingCart>()},
-            new ShoppingCart { CustomerId = 2, ProductItems = new List<ShoppingCart>()}
+            new ShoppingCart { CustomerId = 1, ProductItems = new List<ProductItem>()},
+            new ShoppingCart { CustomerId = 2, ProductItems = new List<ProductItem>()}
         };
     }
 }
