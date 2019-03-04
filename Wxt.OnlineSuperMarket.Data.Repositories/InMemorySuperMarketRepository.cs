@@ -23,7 +23,7 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
         };
         private static readonly List<Receipt> _receipts = new List<Receipt>();
 
-        private static readonly object _productLocker = new object();
+        private static readonly object _productIdLocker = new object();
         private static readonly object _productsLocker = new object ();
         private static readonly object _stockLocker = new object ();
 
@@ -35,7 +35,7 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
             {
                 throw new ArgumentNullException("Cannot create new product.");
             }
-            lock(_productLocker)
+            lock(_productIdLocker)
             {
                 product.Id = ++_productMaxId;
             }
@@ -67,7 +67,7 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
                         var stock = _stocks.FirstOrDefault(s => s.ProductId == productId);
                         if (stock != null)
                         {
-                            throw new ArgumentNullException("Cannot remove product which is still in stock.");
+                            throw new InvalidOperationException("Cannot remove product which is still in stock.");
                         }
                         if (!_products.Remove(product))
                         {
@@ -77,7 +77,7 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Product {productId} does not exist.");
+                    throw new IndexOutOfRangeException($"Product {productId} does not exist.");
                 }
             }
         }
