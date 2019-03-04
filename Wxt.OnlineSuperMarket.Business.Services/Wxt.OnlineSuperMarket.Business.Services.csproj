@@ -45,5 +45,15 @@
     <Compile Include="SuperMarketService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Wxt.OnlineSuperMarket.Data.Entities\Wxt.OnlineSuperMarket.Data.Entities.csproj">
+      <Project>{22dc3f2e-fd7a-40a9-83f1-be1fd767a7ff}</Project>
+      <Name>Wxt.OnlineSuperMarket.Data.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wxt.OnlineSuperMarket.Data.Repositories\Wxt.OnlineSuperMarket.Data.Repositories.csproj">
+      <Project>{7511dbfc-300d-4d81-bb36-772fb3ec2cb0}</Project>
+      <Name>Wxt.OnlineSuperMarket.Data.Repositories</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

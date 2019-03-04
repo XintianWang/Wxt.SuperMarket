@@ -23,7 +23,9 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
         };
         private static readonly List<Receipt> _receipts = new List<Receipt>();
 
-        private static object _productLocker = new object();
+        private static readonly object _productLocker = new object();
+        private static readonly object _productsLocker = new object ();
+        private static readonly object _stockLocker = new object ();
 
         public static int _productMaxId = 3;
 
@@ -41,7 +43,7 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
             {
                 product.Description = product.Name;
             }
-            lock (_products)
+            lock (_productsLocker)
             {
                 _products.Add(product);
             }
@@ -53,42 +55,45 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
             return _products.FirstOrDefault(p => p.Id == id);
         }
 
-        public bool RemoveProduct(int productId)
+        public void RemoveProduct(int productId)
         {
-            lock (_products)
+            lock (_productsLocker)
             {
                 var product = FindProduct(productId);
                 if (product != null)
                 {
-                    lock (_stocks)
+                    lock (_stockLocker)
                     {
                         var stock = _stocks.FirstOrDefault(s => s.ProductId == productId);
                         if (stock != null)
                         {
                             throw new ArgumentNullException("Cannot remove product which is still in stock.");
                         }
-                        return _products.Remove(product);
+                        if (!_products.Remove(product))
+                        {
+                            throw new InvalidOperationException("Unknow problem.");
+                        }
                     }                    
                 }
                 else
                 {
-                    return false;
+                    throw new InvalidOperationException($"Product {productId} does not exist.");
                 }
             }
         }
 
-        public bool IncreaseStock(int productId, int count)
+        public void IncreaseStock(int productId, int count)
         {
             if (count <= 0)
             {
                 throw new ArgumentOutOfRangeException($"Cannot increase {count} product to stock.");
             }
-            lock (_products)
+            lock (_productsLocker)
             {          
                 var product = FindProduct(productId);
                 if (product != null)
                 {
-                    lock (_stocks)
+                    lock (_stockLocker)
                     {
                         var stock = _stocks.FirstOrDefault(s => s.ProductId == productId);
                         if (stock != null)
@@ -100,25 +105,26 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
                             _stocks.Add(new ProductItem() { ProductId = productId, Count = count });
                         }
                     }
-                    return true;
                 }
                 else
-                    return false;
+                {
+                    throw new InvalidOperationException($"Product {productId} does not exist.");
+                }                  
             }                
         }
 
-        public bool DecreaseStock(int productId, int count)
+        public void DecreaseStock(int productId, int count)
         {
             if (count <= 0)
             {
                 throw new ArgumentOutOfRangeException($"Cannot decrease {count} product from stock.");
             }
-            lock (_products)
+            lock (_productsLocker)
             {
                 var product = FindProduct(productId);
                 if (product != null)
                 {
-                    lock (_stocks)
+                    lock (_stockLocker)
                     {
                         var stock = _stocks.FirstOrDefault(s => s.ProductId == productId && s.Count >= count);
                         if (stock != null)
@@ -128,14 +134,17 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
                             {
                                 _stocks.Remove(stock);
                             }
-                            return true;
                         }
                         else
-                            return false;
+                        {
+                            throw new InvalidOperationException($"Product {productId} is out of stock or not enough to.");
+                        }
                     }
                 }
                 else
-                    return false;
+                {
+                    throw new InvalidOperationException($"Product {productId} does not exist.");
+                }
             }
         }
     }

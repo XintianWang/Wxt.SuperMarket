@@ -6,10 +6,10 @@
     {
         Product AddProduct(Product product);
 
-        bool RemoveProduct(int productId);
+        void RemoveProduct(int productId);
 
-        bool IncreaseStock(int productId, int count);
+        void IncreaseStock(int productId, int count);
 
-        bool DecreaseStock(int productId, int count);
+        void DecreaseStock(int productId, int count);
     }
 }
