@@ -14,5 +14,7 @@
         void IncreaseStock(int productId, int count);
 
         void DecreaseStock(int productId, int count);
+
+        int GetStock(int productId);
     }
 }

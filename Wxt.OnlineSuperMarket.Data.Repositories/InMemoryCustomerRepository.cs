@@ -25,7 +25,9 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
         private static readonly object _customersLocker = new object();
         private static readonly object _shoppingCartsLocker = new object();
 
-        public static int _customerMaxId = 2;
+        public static int _customerCurrentId = 2;
+
+        private readonly ISuperMarketRepository _superMarketRepository = new InMemorySuperMarketRepository();
 
         public Customer AddCustomer(Customer customer)
         {
@@ -35,12 +37,15 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
             }
             lock (_customerIdLocker)
             {
-                customer.Id = ++_customerMaxId;
+                customer.Id = ++_customerCurrentId;
             }
             lock (_customersLocker)
             {
                 _customers.Add(customer);
-                _shoppingCarts.Add(new ShoppingCart() { CustomerId = customer.Id, ProductItems = new List<ProductItem>()});
+                lock (_shoppingCartsLocker)
+                {
+                    _shoppingCarts.Add(new ShoppingCart() { CustomerId = customer.Id, ProductItems = new List<ProductItem>() });
+                }              
             }
             return customer;
         }
@@ -63,9 +68,89 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
             }
         }
 
-        public void AddToCart(int shoppingcartId, int productId, int count)
+        public void DeleteCustomer(int customerId)
         {
+            lock (_customerIdLocker)
+            {
+                var customer = _customers.FirstOrDefault(c => c.Id == customerId);
+                if (customer != null)
+                {                  
+                    lock (_shoppingCartsLocker)
+                    {
+                        if (!_shoppingCarts.Remove(_shoppingCarts.FirstOrDefault(s => s.CustomerId == customerId)))
+                        {
+                            throw new InvalidOperationException("Unknow problem.");
+                        }
+                    }
+                    if (!_customers.Remove(customer))
+                    {
+                        throw new InvalidOperationException("Unknow problem.");
+                    }
+                }
+                else
+                {
+                    throw new IndexOutOfRangeException("Customer does not exist.");
+                }
+            }
+            
+        }
 
+        public void AddToCart(int customerId, int productId, int count)
+        {
+            if (count <= 0)
+            {
+                throw new ArgumentOutOfRangeException($"Cannot add {count} product to cart.");
+            }
+            var stockCount = _superMarketRepository.GetStock(productId);
+            if (count > stockCount)
+            {
+                throw new InvalidOperationException($"Product {productId} is out of stock or not enough.");
+            }
+            lock (_shoppingCartsLocker)
+            {
+                var shoppingCart = _shoppingCarts.FirstOrDefault(s => s.CustomerId == customerId);
+                if (shoppingCart == null)
+                {
+                    throw new InvalidOperationException("Cannot find the relative shopping cart.");
+                }
+                var item = shoppingCart.ProductItems.FirstOrDefault(i => i.ProductId == productId);
+                if (item == null)
+                {
+                    shoppingCart.ProductItems.Add(new ProductItem() { ProductId = productId, Count = count });
+                }
+                else
+                {
+                    item.Count += count;
+                }
+            }
+        }
+
+        public int RemoveFromCart(int customerId, int productId, int count)
+        {
+            if (count <= 0)
+            {
+                throw new ArgumentOutOfRangeException($"Cannot add {count} product to cart.");
+            }
+            lock (_shoppingCartsLocker)
+            {
+                var shoppingCart = _shoppingCarts.FirstOrDefault(s => s.CustomerId == customerId);
+                if (shoppingCart == null)
+                {
+                    throw new InvalidOperationException("Cannot find the relative shopping cart.");
+                }
+                var item = shoppingCart.ProductItems.FirstOrDefault(i => i.ProductId == productId);
+                var countInCart = item?.Count ?? 0;
+                int realCount = Math.Min(count, countInCart);
+                if (realCount > 0)
+                {
+                    item.Count -= realCount;
+                    if (item.Count == 0)
+                    {
+                        shoppingCart.ProductItems.Remove(item);
+                    }
+                }
+                return realCount;
+            }
         }
     }
 }
