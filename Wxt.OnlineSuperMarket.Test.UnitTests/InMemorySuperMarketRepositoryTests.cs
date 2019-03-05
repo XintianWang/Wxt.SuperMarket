@@ -1,14 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Wxt.OnlineSuperMarket.Data.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Wxt.OnlineSuperMarket.Data.Entities;
-
-namespace Wxt.OnlineSuperMarket.Test.UnitTests
+﻿namespace Wxt.OnlineSuperMarket.Test.UnitTests
 {
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Wxt.OnlineSuperMarket.Data.Repositories;
+    using System;
+    using Wxt.OnlineSuperMarket.Data.Entities;
+
     [TestClass()]
     public class InMemorySuperMarketRepositoryTests
     {

@@ -2,6 +2,9 @@
 {
     using Wxt.OnlineSuperMarket.Data.Entities;
 
+    /// <summary>
+    /// Defines the <see cref="ISuperMarketRepository" />
+    /// </summary>
     public interface ISuperMarketRepository
     {
         Product AddProduct(Product product);
