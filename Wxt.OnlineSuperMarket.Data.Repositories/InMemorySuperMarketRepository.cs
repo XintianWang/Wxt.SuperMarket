@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Wxt.OnlineSuperMarket.Data.Entities;
-
-namespace Wxt.OnlineSuperMarket.Data.Repositories
+﻿namespace Wxt.OnlineSuperMarket.Data.Repositories
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Wxt.OnlineSuperMarket.Data.Entities;
+
     public class InMemorySuperMarketRepository : ISuperMarketRepository
     {
         private static readonly List<Product> _products = new List<Product>()
@@ -108,7 +106,7 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Product {productId} does not exist.");
+                    throw new IndexOutOfRangeException($"Product {productId} does not exist.");
                 }                  
             }                
         }
@@ -137,15 +135,21 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
                         }
                         else
                         {
-                            throw new InvalidOperationException($"Product {productId} is out of stock or not enough to.");
+                            throw new InvalidOperationException($"Product {productId} is out of stock or not enough.");
                         }
                     }
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Product {productId} does not exist.");
+                    throw new IndexOutOfRangeException($"Product {productId} does not exist.");
                 }
             }
+        }
+
+        public int GetStock(int productId)
+        {
+            var stock = _stocks.FirstOrDefault(s => s.ProductId == productId);
+            return stock?.Count ?? -1;
         }
     }
 }
