@@ -86,7 +86,7 @@
         /// </summary>
         /// <param name="id">The product id<see cref="int"/></param>
         /// <returns>The product with the inputed id or null if cannot find one <see cref="Product"/></returns>
-        private Product FindProduct(int id)
+        public Product FindProduct(int id)
         {
             return _products.FirstOrDefault(p => p.Id == id);
         }
@@ -198,6 +198,36 @@
             }
         }
 
+        public void DecreaseMultipleStock(List<ProductItem> items)
+        {
+            if (items == null || items.Count == 0)
+            {
+                return;
+            }
+            lock (_productsLocker)
+                lock (_stockLocker)
+                {
+                    if (items.Exists(
+                        i => (_stocks.FirstOrDefault(
+                            s => s.ProductId == i.ProductId && s.Count >= i.Count))
+                            == null))
+                    {
+                        throw new InvalidOperationException($"Some products are out of stock or not enough.");
+                    }
+                    foreach (var item in items)
+                    {
+                        int productId = item.ProductId;
+                        int count = item.Count;
+                        var stock = _stocks.FirstOrDefault(s => s.ProductId == productId && s.Count >= count);
+                        stock.Count -= count;
+                        if (stock.Count == 0)
+                        {
+                           _stocks.Remove(stock);
+                        }
+                    }
+                }
+        }
+
         /// <summary>
         /// The GetStock get count of one particular product in the stock.
         /// </summary>
@@ -207,6 +237,32 @@
         {
             var stock = _stocks.FirstOrDefault(s => s.ProductId == productId);
             return stock?.Count ?? -1;
+        }
+
+        public string ListProducts()
+        {
+            List<string> results = new List<string>();
+            foreach(Product p in _products)
+            {
+                var stock = _stocks.FirstOrDefault(s => s.ProductId == p.Id);
+                results.Add(p.ToString() + $" Stock = {stock?.Count??0}");
+            }
+            return results.Count==0
+                ? string.Join(Environment.NewLine, results)
+                : "";
+        }
+
+        public string ListStocks()
+        {
+            List<string> results = new List<string>();
+            foreach (ProductItem s in _stocks)
+            {
+                var product = _products.FirstOrDefault(p => p.Id == s.ProductId);
+                results.Add(product?.ToString()??"Product Info : Unknown" + $" Stock = {s.Count}");
+            }
+            return results.Count == 0
+                ? string.Join(Environment.NewLine, results)
+                : "";
         }
     }
 }

@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using Wxt.OnlineSuperMarket.Data.Entities;
-
-namespace Wxt.OnlineSuperMarket.Data.Repositories
+﻿namespace Wxt.OnlineSuperMarket.Data.Repositories
 {
-    public class InMemoryCustomerRepository
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Cryptography;
+    using System.Text;
+    using Wxt.OnlineSuperMarket.Data.Entities;
+
+    public class InMemoryCustomerRepository : ICustomerRepository
     {
         private static readonly List<Customer> _customers = new List<Customer>
         {
             new Customer  { Id = 1, UserName = "Wxt", Password = "1�\u001bt�h]>�+� ��w�"},
-            new Customer  { Id = 2, UserName = "lnw", Password = ",6s�@���\u000e\a�e�enN"} 
+            new Customer  { Id = 2, UserName = "lnw", Password = ",6s�@���\u000e\a�e�enN"}
         };
+
         private static readonly List<ShoppingCart> _shoppingCarts = new List<ShoppingCart>
         {
             new ShoppingCart { CustomerId = 1, ProductItems = new List<ProductItem>()},
@@ -22,10 +22,16 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
         };
 
         private static readonly object _customerIdLocker = new object();
+
+        private static readonly object _receiptIdLocker = new object();
+
         private static readonly object _customersLocker = new object();
+
         private static readonly object _shoppingCartsLocker = new object();
 
         public static int _customerCurrentId = 2;
+
+        public static int _receiptCurrentId = 0;
 
         private readonly ISuperMarketRepository _superMarketRepository = new InMemorySuperMarketRepository();
 
@@ -35,17 +41,23 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
             {
                 throw new ArgumentNullException("Cannot create new customer.");
             }
+            if (_customers.Exists(c => c.UserName == customer.UserName))
+            {
+                throw new ArgumentNullException($"Username '{customer.UserName}' has been used.");
+            }
             lock (_customerIdLocker)
             {
                 customer.Id = ++_customerCurrentId;
             }
+            var passwordMD5 = Encoding.UTF8.GetString(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(customer.Password)));
+            customer.Password = passwordMD5;
             lock (_customersLocker)
             {
                 _customers.Add(customer);
                 lock (_shoppingCartsLocker)
                 {
                     _shoppingCarts.Add(new ShoppingCart() { CustomerId = customer.Id, ProductItems = new List<ProductItem>() });
-                }              
+                }
             }
             return customer;
         }
@@ -74,7 +86,7 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
             {
                 var customer = _customers.FirstOrDefault(c => c.Id == customerId);
                 if (customer != null)
-                {                  
+                {
                     lock (_shoppingCartsLocker)
                     {
                         if (!_shoppingCarts.Remove(_shoppingCarts.FirstOrDefault(s => s.CustomerId == customerId)))
@@ -92,7 +104,6 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
                     throw new IndexOutOfRangeException("Customer does not exist.");
                 }
             }
-            
         }
 
         public void AddToCart(int customerId, int productId, int count)
@@ -150,6 +161,46 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
                     }
                 }
                 return realCount;
+            }
+        }
+
+        public Receipt CheckOut(int customerId)
+        {
+            lock (_shoppingCartsLocker)
+            {
+                var shoppingCart = _shoppingCarts.FirstOrDefault(s => s.CustomerId == customerId);
+                if (shoppingCart == null)
+                {
+                    throw new InvalidOperationException("Cannot find the relative shopping cart.");
+                }
+                ISuperMarketRepository superMarketRepository = new InMemorySuperMarketRepository();
+                superMarketRepository.DecreaseMultipleStock(shoppingCart.ProductItems);
+
+                
+                Receipt receipt = new Receipt()
+                {
+                    ShoppingItems = new List<ShoppingItem>()
+                };
+
+                lock(_receiptIdLocker)
+                {
+                    receipt.Id = ++_receiptCurrentId;
+                }
+
+                foreach (var item in shoppingCart.ProductItems)
+                {
+                    Product product = superMarketRepository.FindProduct(item.ProductId);
+                    ShoppingItem shoppingItem = new ShoppingItem()
+                    {
+                        ProductId = item.ProductId,
+                        ProductName = product.Name,
+                        Price = product.Price,
+                        Count = item.Count
+                    };
+                    receipt.ShoppingItems.Add(shoppingItem);
+                }
+                shoppingCart.ProductItems.Clear();
+                return receipt;
             }
         }
     }
