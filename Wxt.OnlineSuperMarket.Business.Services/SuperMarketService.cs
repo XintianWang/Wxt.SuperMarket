@@ -9,6 +9,9 @@
     /// </summary>
     public class SuperMarketService
     {
+        /// <summary>
+        /// Defines the _superMarketRepository
+        /// </summary>
         private readonly ISuperMarketRepository _superMarketRepository = new InMemorySuperMarketRepository();
 
         /// <summary>
@@ -19,7 +22,7 @@
         /// <param name="description">New product's description<see cref="string"/></param>
         /// <param name="category">New product's category<see cref="Category"/></param>
         /// <returns>The whole information of new added product<see cref="string"/></returns>
-        public string AddProuct(string name, decimal price, string description = null, Category category = 0)
+        public string AddProuct(string name, decimal price, string description = null, Category category = Category.UnClassified)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -28,6 +31,10 @@
             if (price < 0m)
             {
                 throw new ArgumentOutOfRangeException("Price cannot be less than 0.");
+            }
+            if (!Enum.IsDefined(typeof(Category), category))
+            {
+                throw new ArgumentOutOfRangeException($"Product category {category} is not defined.");
             }
             var product = new Product()
             {

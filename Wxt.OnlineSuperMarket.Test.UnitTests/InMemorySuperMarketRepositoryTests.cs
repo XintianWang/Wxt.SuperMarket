@@ -13,7 +13,7 @@
         [TestInitialize]
         public void Preset()
         {
-            _inMemorySuperMarketRepository = new InMemorySuperMarketRepository();
+            _inMemorySuperMarketRepository.ReinitializeRepository();
         }
 
         [TestMethod()]
@@ -73,7 +73,7 @@
             _inMemorySuperMarketRepository.IncreaseStock(3, 10);
             Assert.AreEqual(310, _inMemorySuperMarketRepository.GetStock(3));
 
-            Assert.AreEqual(0, _inMemorySuperMarketRepository.GetStock(4));
+            Assert.AreEqual(-1, _inMemorySuperMarketRepository.GetStock(4));
 
             Product product = new Product() { Name = "banana", Price = 1.2m };
             Assert.AreEqual("Id = 4 Name = banana Price = 1.2 Category = UnClassified Description = banana",

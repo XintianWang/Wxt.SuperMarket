@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Wxt.OnlineSuperMarket.Business.Services;
 
 namespace Wxt.OnlineSuperMarket.Test.DebugConsole
 {
@@ -11,7 +12,17 @@ namespace Wxt.OnlineSuperMarket.Test.DebugConsole
     {
         static void Main(string[] args)
         {
-            string md5string = Encoding.UTF8.GetString(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes("lnw")));
+            SuperMarketService superMarketService = new SuperMarketService();
+            while (true)
+            {
+                Console.WriteLine("Input the command:");
+                string command = Console.ReadLine();
+                if (command.StartsWith("addproduct"))
+                {
+                    string[] commands = command.Split(' ');
+                    Console.WriteLine(superMarketService.AddProuct(commands[1], decimal.Parse(commands[2])));
+                }
+            }
         }
     }
 }

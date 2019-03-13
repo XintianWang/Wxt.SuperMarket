@@ -49,5 +49,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Wxt.OnlineSuperMarket.Business.Services\Wxt.OnlineSuperMarket.Business.Services.csproj">
+      <Project>{9edd7a7e-39aa-41c9-8e50-e2525d8fcad7}</Project>
+      <Name>Wxt.OnlineSuperMarket.Business.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wxt.OnlineSuperMarket.Data.Entities\Wxt.OnlineSuperMarket.Data.Entities.csproj">
+      <Project>{22DC3F2E-FD7A-40A9-83F1-BE1FD767A7FF}</Project>
+      <Name>Wxt.OnlineSuperMarket.Data.Entities</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

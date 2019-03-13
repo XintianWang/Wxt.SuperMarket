@@ -55,6 +55,29 @@
         /// </summary>
         private static readonly object _stockLocker = new object();
 
+#if DEBUG
+        public void ReinitializeRepository()
+        {
+            _products.Clear();
+            _products.AddRange(
+                new List<Product> {
+                    new Product { Id = 1, Name = "banana", Category = Category.Grocery, Description = "Banana from Mexico", Price = 1.67m },
+                    new Product { Id = 2, Name = "apple", Category = Category.Grocery, Description = "Apple from China", Price = 2.67m },
+                    new Product { Id = 3, Name = "Television", Category = Category.Electronic, Description = "Sony 65\"", Price = 1600.59m }
+                }  
+            );
+            _stocks.Clear();
+            _stocks.AddRange(
+                new List<ProductItem>{
+                    new ProductItem { ProductId = 1, Count = 100 },
+                    new ProductItem { ProductId = 2, Count = 200 },
+                    new ProductItem { ProductId = 3, Count = 300 },
+                });
+            _receipts.Clear();
+            _productCurrentId = 3;
+        }
+#endif
+        
         /// <summary>
         /// The AddProduct method checks input and adds a new product to _products.
         /// </summary>
