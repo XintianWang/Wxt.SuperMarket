@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wxt.OnlineSuperMarket.Data.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wxt.OnlineSuperMarket.Business.Services", "Wxt.OnlineSuperMarket.Business.Services\Wxt.OnlineSuperMarket.Business.Services.csproj", "{9EDD7A7E-39AA-41C9-8E50-E2525D8FCAD7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wxt.OnlineSuperMarket.UI.ConsoleApp", "Wxt.OnlineSuperMarket.UI.ConsoleApp\Wxt.OnlineSuperMarket.UI.ConsoleApp.csproj", "{8D6733C3-3B04-4C5C-8B72-A17F49969851}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{9EDD7A7E-39AA-41C9-8E50-E2525D8FCAD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EDD7A7E-39AA-41C9-8E50-E2525D8FCAD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9EDD7A7E-39AA-41C9-8E50-E2525D8FCAD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D6733C3-3B04-4C5C-8B72-A17F49969851}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D6733C3-3B04-4C5C-8B72-A17F49969851}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D6733C3-3B04-4C5C-8B72-A17F49969851}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D6733C3-3B04-4C5C-8B72-A17F49969851}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{22DC3F2E-FD7A-40A9-83F1-BE1FD767A7FF}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Wxt.OnlineSuperMarket.Data.Entities</RootNamespace>
-    <AssemblyName>Wxt.OnlineSuperMarket.Data.Entities</AssemblyName>
+    <ProjectGuid>{8D6733C3-3B04-4C5C-8B72-A17F49969851}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Wxt.OnlineSuperMarket.UI.ConsoleApp</RootNamespace>
+    <AssemblyName>Wxt.OnlineSuperMarket.UI.ConsoleApp</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -42,14 +42,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Customer.cs" />
-    <Compile Include="Category.cs" />
-    <Compile Include="Product.cs" />
-    <Compile Include="ProductItem.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Receipt.cs" />
-    <Compile Include="ShoppingCart.cs" />
-    <Compile Include="ShoppingItem.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Wxt.OnlineSuperMarket.Business.Services\Wxt.OnlineSuperMarket.Business.Services.csproj">
+      <Project>{9edd7a7e-39aa-41c9-8e50-e2525d8fcad7}</Project>
+      <Name>Wxt.OnlineSuperMarket.Business.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wxt.OnlineSuperMarket.Data.Entities\Wxt.OnlineSuperMarket.Data.Entities.csproj">
+      <Project>{22DC3F2E-FD7A-40A9-83F1-BE1FD767A7FF}</Project>
+      <Name>Wxt.OnlineSuperMarket.Data.Entities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
