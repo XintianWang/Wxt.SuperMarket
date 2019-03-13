@@ -44,6 +44,11 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
             throw new NotImplementedException();
         }
 
+        public void ReinitializeRepository()
+        {
+            throw new NotImplementedException();
+        }
+
         public int RemoveFromCart(int customerId, int productId, int count)
         {
             throw new NotImplementedException();

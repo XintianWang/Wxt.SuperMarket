@@ -35,6 +35,28 @@
 
         private readonly ISuperMarketRepository _superMarketRepository = new InMemorySuperMarketRepository();
 
+#if DEBUG
+        public void ReinitializeRepository()
+        {
+            _customers.Clear();
+            _customers.AddRange(
+                new List<Customer> {
+                    new Customer  { Id = 1, UserName = "wxt", Password = " ,�b�Y\a[�K\a\u0015-#Kp"},
+                    new Customer  { Id = 2, UserName = "lnw", Password = " ,�b�Y\a[�K\a\u0015-#Kp"}
+                }
+            );
+
+            _shoppingCarts.Clear();
+            _shoppingCarts.AddRange(
+                new List<ShoppingCart>{
+                    new ShoppingCart { CustomerId = 1, ProductItems = new List<ProductItem>()},
+                    new ShoppingCart { CustomerId = 2, ProductItems = new List<ProductItem>()}
+                });
+
+            _customerCurrentId = 2;
+        }
+#endif
+
         public Customer AddCustomer(Customer customer)
         {
             if (customer == null || string.IsNullOrWhiteSpace(customer.UserName) || string.IsNullOrWhiteSpace(customer.Password))

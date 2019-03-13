@@ -34,7 +34,7 @@ namespace Wxt.OnlineSuperMarket.Test.UnitTests
         [TestMethod()]
         public void AddProuctTestForValidInput()
         {
-            Assert.AreEqual("Id = 4 Name = peach Price = 1.23 Category = UnClassified Description = peach", 
+            Assert.AreEqual("Id = 4 Name = peach Price = 1.23 Category = UnClassified Description = peach",
                 _superMarketService.AddProuct("peach", 1.23m));
 
             Assert.AreEqual("Id = 5 Name = CDPlayer Price = 165 Category = Electronic Description = CDPlayer",
@@ -45,10 +45,34 @@ namespace Wxt.OnlineSuperMarket.Test.UnitTests
                 _superMarketService.AddProuct("CDPlayer3", 165m, "  ", Category.Electronic));
 
             Assert.AreEqual("Id = 8 Name = CDPlayer4 Price = 165 Category = Electronic Description = CDPlayer4",
-                _superMarketService.AddProuct("CDPlayer4", 165m, category : Category.Electronic));
+                _superMarketService.AddProuct("CDPlayer4", 165m, category: Category.Electronic));
 
             Assert.AreEqual("Id = 9 Name = CDPlayer5 Price = 165 Category = Electronic Description = The last type of CDPlayer",
                 _superMarketService.AddProuct("CDPlayer5", 165m, "The last type of CDPlayer", Category.Electronic));
+        }
+
+        [TestMethod()]
+        public void RemoveProductTestForInvalidInput()
+        {
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => _superMarketService.RemoveProduct(-1));
+        }
+
+        [TestMethod()]
+        public void IncreaseStocktTest()
+        {
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => _superMarketService.IncreaseStockt(0, 20));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => _superMarketService.IncreaseStockt(-1, 20));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => _superMarketService.IncreaseStockt(1, 0));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => _superMarketService.IncreaseStockt(1, -10));
+        }
+
+        [TestMethod()]
+        public void DecreaseStocktTest()
+        {
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => _superMarketService.DecreaseStockt(0, 20));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => _superMarketService.DecreaseStockt(-1, 20));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => _superMarketService.DecreaseStockt(1, 0));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => _superMarketService.DecreaseStockt(1, -10));
         }
     }
 }

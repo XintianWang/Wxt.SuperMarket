@@ -50,12 +50,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InMemoryCustomerRepositoryTests.cs" />
     <Compile Include="InMemorySuperMarketRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SuperMarketServiceTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wxt.OnlineSuperMarket.Business.Services\Wxt.OnlineSuperMarket.Business.Services.csproj">

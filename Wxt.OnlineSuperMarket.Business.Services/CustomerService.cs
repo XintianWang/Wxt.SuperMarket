@@ -10,6 +10,13 @@
 
         private int CustomerId { get; set; } = 0;
 
+#if DEBUG
+        public void ReinitializeRepository()
+        {
+            _customerRepository.ReinitializeRepository();
+        }
+#endif
+
         public string AddCustomer(string name, string password)
         {
             if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(password))
