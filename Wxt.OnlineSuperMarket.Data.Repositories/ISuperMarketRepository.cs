@@ -5,6 +5,9 @@
 
     public interface ISuperMarketRepository
     {
+#if DEBUG
+        void ReinitializeRepository();
+#endif
         Product AddProduct(Product product);
 
         void RemoveProduct(int productId);
