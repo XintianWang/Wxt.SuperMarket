@@ -14,6 +14,10 @@
 
         int RemoveFromCart(int customerId, int productId, int count);
 
+        string ListShoppingCart(int customerId);
+
+        void ClearCart(int customerId);
+
         Receipt CheckOut(int customerId);
     }
 }

@@ -11,8 +11,8 @@
     {
         private static readonly List<Customer> _customers = new List<Customer>
         {
-            new Customer  { Id = 1, UserName = "Wxt", Password = "1�\u001bt�h]>�+� ��w�"},
-            new Customer  { Id = 2, UserName = "lnw", Password = ",6s�@���\u000e\a�e�enN"}
+            new Customer  { Id = 1, UserName = "wxt", Password = " ,�b�Y\a[�K\a\u0015-#Kp"},
+            new Customer  { Id = 2, UserName = "lnw", Password = " ,�b�Y\a[�K\a\u0015-#Kp"}
         };
 
         private static readonly List<ShoppingCart> _shoppingCarts = new List<ShoppingCart>
@@ -43,7 +43,7 @@
             }
             if (_customers.Exists(c => c.UserName == customer.UserName))
             {
-                throw new ArgumentNullException($"Username '{customer.UserName}' has been used.");
+                throw new InvalidOperationException($"Username '{customer.UserName}' has been used.");
             }
             lock (_customerIdLocker)
             {
@@ -122,7 +122,7 @@
                 var shoppingCart = _shoppingCarts.FirstOrDefault(s => s.CustomerId == customerId);
                 if (shoppingCart == null)
                 {
-                    throw new InvalidOperationException("Cannot find the relative shopping cart.");
+                    throw new InvalidOperationException("Cannot find the related shopping cart.");
                 }
                 var item = shoppingCart.ProductItems.FirstOrDefault(i => i.ProductId == productId);
                 if (item == null)
@@ -147,7 +147,7 @@
                 var shoppingCart = _shoppingCarts.FirstOrDefault(s => s.CustomerId == customerId);
                 if (shoppingCart == null)
                 {
-                    throw new InvalidOperationException("Cannot find the relative shopping cart.");
+                    throw new InvalidOperationException("Cannot find the related shopping cart.");
                 }
                 var item = shoppingCart.ProductItems.FirstOrDefault(i => i.ProductId == productId);
                 var countInCart = item?.Count ?? 0;
@@ -164,6 +164,44 @@
             }
         }
 
+        public void ClearCart(int customerId)
+        {
+            lock (_shoppingCartsLocker)
+            {
+                var shoppingCart = _shoppingCarts.FirstOrDefault(s => s.CustomerId == customerId);
+                if (shoppingCart == null)
+                {
+                    throw new InvalidOperationException("Cannot find the related shopping cart.");
+                }
+                shoppingCart.ProductItems.Clear();
+            }
+        }
+
+        public string ListShoppingCart(int customerId)
+        {
+            var shoppingCart = _shoppingCarts.FirstOrDefault(s => s.CustomerId == customerId);
+            if (shoppingCart == null)
+            {
+                throw new InvalidOperationException("Cannot find the related shopping cart.");
+            }
+            if (shoppingCart.ProductItems == null || shoppingCart.ProductItems.Count <= 0)
+            {
+                throw new InvalidOperationException("There is nothing in the shopping cart.");
+            }
+
+            ISuperMarketRepository superMarketRepository = new InMemorySuperMarketRepository();
+
+            List<string> results = new List<string>();
+            foreach (ProductItem s in shoppingCart.ProductItems)
+            {
+                var product = superMarketRepository.FindProduct(s.ProductId);
+                results.Add($"{product?.ToString() ?? "Product Info : Unknown"} Count = {s.Count}");
+            }
+            return results.Count > 0
+                ? string.Join(Environment.NewLine, results)
+                : "";
+        }
+
         public Receipt CheckOut(int customerId)
         {
             lock (_shoppingCartsLocker)
@@ -171,18 +209,23 @@
                 var shoppingCart = _shoppingCarts.FirstOrDefault(s => s.CustomerId == customerId);
                 if (shoppingCart == null)
                 {
-                    throw new InvalidOperationException("Cannot find the relative shopping cart.");
+                    throw new InvalidOperationException("Cannot find the related shopping cart.");
                 }
+                if (shoppingCart.ProductItems == null || shoppingCart.ProductItems.Count <= 0)
+                {
+                    throw new InvalidOperationException("There is nothing in the shopping cart.");
+                }
+
                 ISuperMarketRepository superMarketRepository = new InMemorySuperMarketRepository();
                 superMarketRepository.DecreaseMultipleStock(shoppingCart.ProductItems);
 
-                
                 Receipt receipt = new Receipt()
                 {
-                    ShoppingItems = new List<ShoppingItem>()
+                    ShoppingItems = new List<ShoppingItem>(),
+                    TransactionTime = DateTimeOffset.Now
                 };
 
-                lock(_receiptIdLocker)
+                lock (_receiptIdLocker)
                 {
                     receipt.Id = ++_receiptCurrentId;
                 }
