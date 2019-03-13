@@ -9,6 +9,10 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
 {
     class JsonCustomerRepository : ICustomerRepository
     {
+        private const string _customerJsonFile = "customers.json";
+        private const string _shoppingCartJsonFile = "shoppingcarts.json";
+        private const string _receiptJsonFile = "receipts.json";
+
         public Customer AddCustomer(Customer customer)
         {
             throw new NotImplementedException();
