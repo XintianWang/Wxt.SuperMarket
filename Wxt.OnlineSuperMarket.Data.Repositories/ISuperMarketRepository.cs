@@ -1,10 +1,8 @@
 ﻿namespace Wxt.OnlineSuperMarket.Data.Repositories
 {
+    using System.Collections.Generic;
     using Wxt.OnlineSuperMarket.Data.Entities;
 
-    /// <summary>
-    /// Defines the <see cref="ISuperMarketRepository" />
-    /// </summary>
     public interface ISuperMarketRepository
     {
         Product AddProduct(Product product);
@@ -14,5 +12,15 @@
         void IncreaseStock(int productId, int count);
 
         void DecreaseStock(int productId, int count);
+
+        void DecreaseMultipleStock(List<ProductItem> items);
+
+        int GetStock(int productId);
+
+        Product FindProduct(int id);
+
+        string ListProducts();
+
+        string ListStocks();
     }
 }
