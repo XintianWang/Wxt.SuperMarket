@@ -50,6 +50,7 @@
     <Compile Include="InMemorySuperMarketRepository.cs" />
     <Compile Include="ISuperMarketRepository.cs" />
     <Compile Include="JsonCustomerRepository.cs" />
+    <Compile Include="JsonSuperMarketRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

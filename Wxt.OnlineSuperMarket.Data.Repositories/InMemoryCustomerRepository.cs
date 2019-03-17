@@ -204,7 +204,7 @@
             var shoppingCart = _shoppingCarts.FirstOrDefault(s => s.CustomerId == customerId);
             if (shoppingCart == null)
             {
-                throw new InvalidOperationException("Cannot find the related shopping cart.");
+                throw new NullReferenceException("Cannot find the related shopping cart.");
             }
             if (shoppingCart.ProductItems == null || shoppingCart.ProductItems.Count <= 0)
             {

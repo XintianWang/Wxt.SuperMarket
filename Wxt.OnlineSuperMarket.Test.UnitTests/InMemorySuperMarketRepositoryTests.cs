@@ -8,7 +8,7 @@
     [TestClass()]
     public class InMemorySuperMarketRepositoryTests
     {
-        InMemorySuperMarketRepository _inMemorySuperMarketRepository = new InMemorySuperMarketRepository();
+        private InMemorySuperMarketRepository _inMemorySuperMarketRepository = new InMemorySuperMarketRepository();
 
         [TestInitialize]
         public void Preset()
