@@ -15,13 +15,14 @@ namespace Wxt.OnlineSuperMarket.Data.Repositories
         private const string _shoppingCartJsonFile = "shoppingcarts.json";
         private const string _receiptJsonFile = "receipts.json";
 
-        private T ReadData<T>(string fileName)
-        {
-            JsonReader jsonReader = new JsonTextReader(
-                new StreamReader(File.Open(fileName, FileMode.OpenOrCreate, FileAccess.Read)));
-            JsonSerializer jsonSerializer = new JsonSerializer();
-            return jsonSerializer.Deserialize<T>(jsonReader);
-        }
+
+        private const string _customerAndCartLockerFile = "customerandcart.lk";
+
+        private const string _receiptLockerFile = "receipts.lk";
+
+        private readonly JsonHandler _jsonHandler = new JsonHandler();
+
+        private readonly ShareFileLocker _FileLocker = new ShareFileLocker();
 
         public Customer AddCustomer(Customer customer)
         {
