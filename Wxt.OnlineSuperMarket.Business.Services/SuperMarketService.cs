@@ -83,5 +83,10 @@
         {
             return _superMarketRepository.ListStocks();
         }
+
+        public string ListAllReceipts()
+        {
+            return _superMarketRepository.ListReceipts();
+        }
     }
 }
