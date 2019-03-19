@@ -6,15 +6,15 @@
 
     public class SuperMarketService
     {
-        private readonly ISuperMarketRepository _superMarketRepository = new InMemorySuperMarketRepository();
+        private readonly ISuperMarketRepository _superMarketRepository = new JsonSuperMarketRepository();
 
 #if DEBUG
         public void ReinitializeRepository()
         {
             _superMarketRepository.ReinitializeRepository();
         }
-#endif
 
+#endif
         public string AddProuct(string name, decimal price, string description = null, Category category = 0)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -24,10 +24,6 @@
             if (price < 0m)
             {
                 throw new ArgumentOutOfRangeException("Price cannot be less than 0.");
-            }
-            if (!Enum.IsDefined(typeof(Category), category))
-            {
-                throw new ArgumentOutOfRangeException("Category value is invalid.");
             }
             var product = new Product()
             {
