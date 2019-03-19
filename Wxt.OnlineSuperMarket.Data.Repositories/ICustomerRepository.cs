@@ -4,6 +4,9 @@
 
     public interface ICustomerRepository
     {
+#if DEBUG
+        void ReinitializeRepository();
+#endif
         Customer AddCustomer(Customer customer);
 
         int Login(string userName, string password);
