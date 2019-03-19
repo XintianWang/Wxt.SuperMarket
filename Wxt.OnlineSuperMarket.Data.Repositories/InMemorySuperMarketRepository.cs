@@ -268,5 +268,17 @@
                 ? string.Join(Environment.NewLine, results)
                 : "";
         }
+
+        public string ListReceipts()
+        {
+            List<string> results = new List<string>();
+            foreach (Receipt r in _receipts)
+            {
+                results.Add($"{r.ToString()}");
+            }
+            return results.Count > 0
+                ? string.Join(Environment.NewLine, results)
+                : "";
+        }
     }
 }

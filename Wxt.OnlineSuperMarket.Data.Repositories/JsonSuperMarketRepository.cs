@@ -428,5 +428,24 @@
                 ? string.Join(Environment.NewLine, results)
                 : "";
         }
+
+        public string ListReceipts()
+        {
+            FileStream locker = _FileLocker.LockObj(_receiptLockerFile);
+
+            GetReceipts();
+
+            List<string> results = new List<string>();
+            foreach (Receipt r in Receipts.ReceiptList)
+            {
+                results.Add($"{r.ToString()}");
+            }
+
+            _FileLocker.UnlockObj(locker);
+
+            return results.Count > 0
+                ? string.Join(Environment.NewLine, results)
+                : "";
+        }
     }
 }

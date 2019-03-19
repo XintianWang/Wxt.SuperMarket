@@ -25,5 +25,7 @@
         string ListProducts();
 
         string ListStocks();
+
+        string ListReceipts();
     }
 }

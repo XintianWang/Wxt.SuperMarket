@@ -16,7 +16,7 @@
                 Console.WriteLine("Command List:");
                 Console.WriteLine("addcustomer name password, login username password, logout, deleteCustomer");
                 Console.WriteLine("listproducts, liststocks, pickup productid count, putback productid count, clearcart, listcart, checkout");
-                Console.WriteLine("addproduct name price, removeproduct id, increasestock id count, decreasestock id count");
+                Console.WriteLine("addproduct name price, removeproduct id, increasestock id count, decreasestock id count, listreceipts");
                 Console.WriteLine("Please input command:");
                 string command = Console.ReadLine().Trim();
                 string[] commands = command.Split(' ');
@@ -64,6 +64,10 @@
 
                         case "liststocks":
                             Console.WriteLine(marketService.ListAllStocks());
+                            break;
+
+                        case "listreceipts":
+                            Console.WriteLine(marketService.ListAllReceipts());
                             break;
 
                         case "pickup":
