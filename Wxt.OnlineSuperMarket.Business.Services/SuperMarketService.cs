@@ -25,6 +25,10 @@
             {
                 throw new ArgumentOutOfRangeException("Price cannot be less than 0.");
             }
+            if (!Enum.IsDefined(typeof(Category), category))
+            {
+                throw new ArgumentOutOfRangeException("Category value is invalid.");
+            }
             var product = new Product()
             {
                 Name = name.Trim(),
