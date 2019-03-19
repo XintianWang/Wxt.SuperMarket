@@ -6,7 +6,7 @@
     using System.Linq;
     using Wxt.OnlineSuperMarket.Data.Entities;
 
-    class JsonSuperMarketRepository : ISuperMarketRepository
+    public class JsonSuperMarketRepository : ISuperMarketRepository
     {
         private const string _productFile = "products.json";
 
@@ -26,7 +26,7 @@
 
         private List<ProductItem> Stocks { get; set; }
 
-        private List<Receipt> Receipts { get; set; }
+        private ReceiptRecords Receipts { get; set; }
 
         class ProductRecords
         {
@@ -35,8 +35,18 @@
             public List<Product> ProductList { get; set; }
         }
 
+        class ReceiptRecords
+        {
+            public int ReceiptCurrentId { get; set; }
+
+            public List<Receipt> ReceiptList { get; set; }
+        }
+
 #if DEBUG
         public void ReinitializeRepository()
+#else
+        private void ReinitializeRepository()
+#endif
         {
             Products = new ProductRecords
             {
@@ -51,39 +61,30 @@
 
             Stocks = new List<ProductItem>
             {
-                    new ProductItem { ProductId = 1, Count = 100 },
-                    new ProductItem { ProductId = 2, Count = 200 },
-                    new ProductItem { ProductId = 3, Count = 300 },
+                new ProductItem { ProductId = 1, Count = 100 },
+                new ProductItem { ProductId = 2, Count = 200 },
+                new ProductItem { ProductId = 3, Count = 300 },
             };
 
-            Receipts = new List<Receipt>();
-
-            FileStream locker = _FileLocker.LockObj(_productAndStockLockerFile);
+            Receipts = new ReceiptRecords()
+            {
+                ReceiptCurrentId = 0,
+                ReceiptList = new List<Receipt>()
+            };
 
             _jsonHandler.SaveRecords(_productFile, Products);
 
             _jsonHandler.SaveRecords(_stockFile, Stocks);
 
-            _FileLocker.UnlockObj(locker);
-
-            locker = _FileLocker.LockObj(_receiptLockerFile);
-
             _jsonHandler.SaveRecords(_receiptFile, Receipts);
-
-            _FileLocker.UnlockObj(locker);
         }
-#endif
 
         private void GetProducts()
         {
             Products = _jsonHandler.GetRecords<ProductRecords>(_productFile);
             if (Products == null)
             {
-                Products = new ProductRecords
-                {
-                    ProductCurrentId = 0,
-                    ProductList = new List<Product>()
-                };
+                ReinitializeRepository();
             }
         }
 
@@ -92,7 +93,22 @@
             Stocks = _jsonHandler.GetRecords<List<ProductItem>>(_stockFile);
             if (Stocks == null)
             {
-                Stocks = new List<ProductItem>();
+                ReinitializeRepository();
+            }
+        }
+
+        private void GetReceipts()
+        {
+            Receipts = _jsonHandler.GetRecords<ReceiptRecords>(_receiptFile);
+            if (Receipts == null)
+            {
+                Receipts = new ReceiptRecords()
+                {
+                    ReceiptCurrentId = 0,
+                    ReceiptList = new List<Receipt>()
+                };
+
+                _jsonHandler.SaveRecords(_receiptFile, Receipts);
             }
         }
 
@@ -185,16 +201,21 @@
             }
         }
 
-        public void DecreaseMultipleStock(List<ProductItem> items)
+        public Receipt Checkout(List<ProductItem> items)
         {
             if (items == null || items.Count == 0)
             {
-                return;
+                throw new InvalidOperationException("There is nothing in the shopping cart.");
             }
+
             FileStream locker = _FileLocker.LockObj(_productAndStockLockerFile);
+            FileStream lockerReceipt = null;
 
             try
             {
+                GetProducts();
+                GetStocks();
+
                 if (items.Exists(
                     i => Products.ProductList.FirstOrDefault(
                         p => p.Id == i.ProductId) == null))
@@ -209,6 +230,12 @@
                     throw new InvalidOperationException($"Some products are out of stock or not enough.");
                 }
 
+                Receipt receipt = new Receipt()
+                {
+                    ShoppingItems = new List<ShoppingItem>(),
+                    TransactionTime = DateTimeOffset.Now
+                };
+
                 foreach (var item in items)
                 {
                     int productId = item.ProductId;
@@ -219,8 +246,28 @@
                     {
                         Stocks.Remove(stock);
                     }
+
+                    Product product = FindProductInner(productId);
+                    ShoppingItem shoppingItem = new ShoppingItem()
+                    {
+                        ProductId = item.ProductId,
+                        ProductName = product.Name,
+                        Price = product.Price,
+                        Count = count
+                    };
+                    receipt.ShoppingItems.Add(shoppingItem);
                 }
+
+                lockerReceipt = _FileLocker.LockObj(_receiptLockerFile);
+
+                GetReceipts();
+                receipt.Id = ++Receipts.ReceiptCurrentId;
+                Receipts.ReceiptList.Add(receipt);
+
+                _jsonHandler.SaveRecords(_receiptFile, Receipts);
                 _jsonHandler.SaveRecords(_stockFile, Stocks);
+
+                return receipt;
             }
             catch (Exception)
             {
@@ -229,6 +276,10 @@
             finally
             {
                 _FileLocker.UnlockObj(locker);
+                if (lockerReceipt != null)
+                {
+                    _FileLocker.UnlockObj(lockerReceipt);
+                }
             }
         }
 
@@ -340,6 +391,9 @@
         {
             FileStream locker = _FileLocker.LockObj(_productAndStockLockerFile);
 
+            GetProducts();
+            GetStocks();
+
             List<string> results = new List<string>();
             foreach (Product p in Products.ProductList)
             {
@@ -357,6 +411,9 @@
         public string ListStocks()
         {
             FileStream locker = _FileLocker.LockObj(_productAndStockLockerFile);
+
+            GetProducts();
+            GetStocks();
 
             List<string> results = new List<string>();
             foreach (ProductItem s in Stocks)

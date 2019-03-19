@@ -31,6 +31,12 @@
 
         private static readonly object _stockLocker = new object();
 
+        private static readonly object _receiptIdLocker = new object();
+
+        private static readonly object _receiptsLocker = new object();
+
+        public static int _receiptCurrentId = 0;
+
 #if DEBUG
         public void ReinitializeRepository()
         {
@@ -173,11 +179,11 @@
             }
         }
 
-        public void DecreaseMultipleStock(List<ProductItem> items)
+        public Receipt Checkout(List<ProductItem> items)
         {
             if (items == null || items.Count == 0)
             {
-                return;
+                throw new InvalidOperationException("There is nothing in the shopping cart.");
             }
             lock (_productsLocker)
                 lock (_stockLocker)
@@ -189,6 +195,18 @@
                     {
                         throw new InvalidOperationException($"Some products are out of stock or not enough.");
                     }
+
+                    Receipt receipt = new Receipt()
+                    {
+                        ShoppingItems = new List<ShoppingItem>(),
+                        TransactionTime = DateTimeOffset.Now
+                    };
+
+                    lock (_receiptIdLocker)
+                    {
+                        receipt.Id = ++_receiptCurrentId;
+                    }
+
                     foreach (var item in items)
                     {
                         int productId = item.ProductId;
@@ -199,7 +217,23 @@
                         {
                             _stocks.Remove(stock);
                         }
+
+                        Product product = FindProduct(productId);
+                        ShoppingItem shoppingItem = new ShoppingItem()
+                        {
+                            ProductId = item.ProductId,
+                            ProductName = product.Name,
+                            Price = product.Price,
+                            Count = count
+                        };
+                        receipt.ShoppingItems.Add(shoppingItem);
                     }
+                    lock (_receiptsLocker)
+                    {
+                        _receipts.Add(receipt);
+                    }
+
+                    return receipt;
                 }
         }
 

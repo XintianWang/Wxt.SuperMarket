@@ -23,17 +23,30 @@
 
         private static readonly object _customerIdLocker = new object();
 
-        private static readonly object _receiptIdLocker = new object();
-
         private static readonly object _customersLocker = new object();
 
         private static readonly object _shoppingCartsLocker = new object();
 
         public static int _customerCurrentId = 2;
 
-        public static int _receiptCurrentId = 0;
+#if DEBUG
+        public void ReinitializeRepository()
+        {
+            _customers.Clear();
+            _customers.AddRange(new List<Customer>
+            {
+                new Customer  { Id = 1, UserName = "wxt", Password = " ,�b�Y\a[�K\a\u0015-#Kp"},
+                new Customer  { Id = 2, UserName = "lnw", Password = " ,�b�Y\a[�K\a\u0015-#Kp"}
+            });
 
-        private readonly ISuperMarketRepository _superMarketRepository = new InMemorySuperMarketRepository();
+            _shoppingCarts.Clear();
+            _shoppingCarts.AddRange(new List<ShoppingCart>
+            {
+                new ShoppingCart { CustomerId = 1, ProductItems = new List<ProductItem>()},
+                new ShoppingCart { CustomerId = 2, ProductItems = new List<ProductItem>()}
+            });
+        }
+#endif
 
         public Customer AddCustomer(Customer customer)
         {
@@ -112,6 +125,8 @@
             {
                 throw new ArgumentOutOfRangeException($"Cannot add {count} product to cart.");
             }
+            InMemorySuperMarketRepository _superMarketRepository = new InMemorySuperMarketRepository();
+
             var stockCount = _superMarketRepository.GetStock(productId);
             if (count > stockCount)
             {
@@ -189,7 +204,7 @@
                 throw new InvalidOperationException("There is nothing in the shopping cart.");
             }
 
-            ISuperMarketRepository superMarketRepository = new InMemorySuperMarketRepository();
+            InMemorySuperMarketRepository superMarketRepository = new InMemorySuperMarketRepository();
 
             List<string> results = new List<string>();
             foreach (ProductItem s in shoppingCart.ProductItems)
@@ -216,32 +231,9 @@
                     throw new InvalidOperationException("There is nothing in the shopping cart.");
                 }
 
-                ISuperMarketRepository superMarketRepository = new InMemorySuperMarketRepository();
-                superMarketRepository.DecreaseMultipleStock(shoppingCart.ProductItems);
+                InMemorySuperMarketRepository superMarketRepository = new InMemorySuperMarketRepository();
+                var receipt = superMarketRepository.Checkout(shoppingCart.ProductItems);
 
-                Receipt receipt = new Receipt()
-                {
-                    ShoppingItems = new List<ShoppingItem>(),
-                    TransactionTime = DateTimeOffset.Now
-                };
-
-                lock (_receiptIdLocker)
-                {
-                    receipt.Id = ++_receiptCurrentId;
-                }
-
-                foreach (var item in shoppingCart.ProductItems)
-                {
-                    Product product = superMarketRepository.FindProduct(item.ProductId);
-                    ShoppingItem shoppingItem = new ShoppingItem()
-                    {
-                        ProductId = item.ProductId,
-                        ProductName = product.Name,
-                        Price = product.Price,
-                        Count = item.Count
-                    };
-                    receipt.ShoppingItems.Add(shoppingItem);
-                }
                 shoppingCart.ProductItems.Clear();
                 return receipt;
             }

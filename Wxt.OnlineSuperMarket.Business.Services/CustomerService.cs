@@ -6,7 +6,7 @@
 
     public class CustomerService
     {
-        private readonly ICustomerRepository _customerRepository = new InMemoryCustomerRepository();
+        private readonly ICustomerRepository _customerRepository = new JsonCustomerRepository();
 
         private int CustomerId { get; set; } = 0;
 

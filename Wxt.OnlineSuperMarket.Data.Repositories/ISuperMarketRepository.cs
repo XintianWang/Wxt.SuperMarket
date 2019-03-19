@@ -16,7 +16,7 @@
 
         void DecreaseStock(int productId, int count);
 
-        void DecreaseMultipleStock(List<ProductItem> items);
+        Receipt Checkout(List<ProductItem> items);
 
         int GetStock(int productId);
 

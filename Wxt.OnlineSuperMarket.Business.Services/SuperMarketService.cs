@@ -6,7 +6,7 @@
 
     public class SuperMarketService
     {
-        private readonly ISuperMarketRepository _superMarketRepository = new InMemorySuperMarketRepository();
+        private readonly ISuperMarketRepository _superMarketRepository = new JsonSuperMarketRepository();
 
 #if DEBUG
         public void ReinitializeRepository()
