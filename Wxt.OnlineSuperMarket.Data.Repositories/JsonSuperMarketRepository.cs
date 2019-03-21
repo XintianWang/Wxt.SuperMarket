@@ -137,10 +137,6 @@
                 _jsonHandler.SaveRecords(_productFile, Products);
                 return product;
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 _FileLocker.UnlockObj(locker);
@@ -190,10 +186,6 @@
                 }
 
                 _jsonHandler.SaveRecords(_productFile, Products);
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
@@ -269,10 +261,6 @@
 
                 return receipt;
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 _FileLocker.UnlockObj(locker);
@@ -319,10 +307,6 @@
                 {
                     throw new IndexOutOfRangeException($"Product {productId} does not exist.");
                 }
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
@@ -376,10 +360,6 @@
                 {
                     throw new IndexOutOfRangeException($"Product {productId} does not exist.");
                 }
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {

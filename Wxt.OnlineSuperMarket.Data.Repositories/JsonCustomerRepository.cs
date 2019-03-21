@@ -109,10 +109,6 @@
 
                 return customer;
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 _FileLocker.UnlockObj(locker);
@@ -147,10 +143,6 @@
                     throw new IndexOutOfRangeException("Customer does not exist.");
                 }
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 _FileLocker.UnlockObj(locker);
@@ -183,10 +175,6 @@
                     throw new IndexOutOfRangeException("Cannot login with username and password.");
                 }
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 _FileLocker.UnlockObj(locker);
@@ -206,10 +194,6 @@
                 }
                 shoppingCart.ProductItems.Clear();
                 _jsonHandler.SaveRecords(_shoppingCartJsonFile, ShoppingCarts);
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
@@ -253,10 +237,6 @@
                 }
                 _jsonHandler.SaveRecords(_shoppingCartJsonFile, ShoppingCarts);
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 _FileLocker.UnlockObj(locker);
@@ -291,10 +271,6 @@
                 return results.Count > 0
                     ? string.Join(Environment.NewLine, results)
                     : "";
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
@@ -334,10 +310,6 @@
                 _jsonHandler.SaveRecords(_shoppingCartJsonFile, ShoppingCarts);
                 return realCount;
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 _FileLocker.UnlockObj(locker);
@@ -369,10 +341,6 @@
                 _jsonHandler.SaveRecords(_shoppingCartJsonFile, ShoppingCarts);
 
                 return receipt;
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
