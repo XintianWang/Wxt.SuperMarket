@@ -13,8 +13,8 @@
         {
             _superMarketRepository.ReinitializeRepository();
         }
-
 #endif
+
         public string AddProuct(string name, decimal price, string description = null, Category category = 0)
         {
             if (string.IsNullOrWhiteSpace(name))

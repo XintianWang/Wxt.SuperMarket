@@ -69,18 +69,18 @@
         [TestMethod()]
         public void IncreaseStockTestForValidInput()
         {
-            Assert.AreEqual(300, _inMemorySuperMarketRepository.GetStockInner(3));
+            Assert.AreEqual(300, _inMemorySuperMarketRepository.GetStock(3));
             _inMemorySuperMarketRepository.IncreaseStock(3, 10);
-            Assert.AreEqual(310, _inMemorySuperMarketRepository.GetStockInner(3));
+            Assert.AreEqual(310, _inMemorySuperMarketRepository.GetStock(3));
 
-            Assert.AreEqual(-1, _inMemorySuperMarketRepository.GetStockInner(4));
+            Assert.AreEqual(-1, _inMemorySuperMarketRepository.GetStock(4));
 
             Product product = new Product() { Name = "banana", Price = 1.2m };
             Assert.AreEqual("Id = 4 Name = banana Price = 1.2 Category = UnClassified Description = banana",
                 _inMemorySuperMarketRepository.AddProduct(product).ToString());
 
             _inMemorySuperMarketRepository.IncreaseStock(4, 10);
-            Assert.AreEqual(10, _inMemorySuperMarketRepository.GetStockInner(4));
+            Assert.AreEqual(10, _inMemorySuperMarketRepository.GetStock(4));
         }
 
         [TestMethod()]
@@ -99,11 +99,11 @@
         [TestMethod()]
         public void DecreaseStockTestForValidInput()
         {
-            Assert.AreEqual(300, _inMemorySuperMarketRepository.GetStockInner(3));
+            Assert.AreEqual(300, _inMemorySuperMarketRepository.GetStock(3));
             _inMemorySuperMarketRepository.DecreaseStock(3, 10);
-            Assert.AreEqual(290, _inMemorySuperMarketRepository.GetStockInner(3));
+            Assert.AreEqual(290, _inMemorySuperMarketRepository.GetStock(3));
             _inMemorySuperMarketRepository.DecreaseStock(3, 290);
-            Assert.AreEqual(-1, _inMemorySuperMarketRepository.GetStockInner(3));
+            Assert.AreEqual(-1, _inMemorySuperMarketRepository.GetStock(3));
         }
     }
 }
